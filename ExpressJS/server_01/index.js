@@ -1,6 +1,7 @@
 const express = require("express")
 const path = require("path")
 const fs = require("fs")
+const users = require("./users.json")
 const homePageFileLocation = path.join(__dirname, "/views/HomePage/index.html")
 const regPageFileLocation = path.join(__dirname, "/views/RegistrationPage/index.html")
 const submitPageFileLocation = path.join(__dirname, "/views/SubmittedPage/index.html")
@@ -25,6 +26,15 @@ app.post("/home/submit", (req, res) => {
     const submittedUser = req.body
     // res.json({success : true, msg : "Data submitted successfully", submittedUser})
     console.log(submittedUser)
+    const userLength = users.length
+
+    users.push({
+        id : userLength + 1,
+        ...submittedUser
+    })
+    fs.writeFile("users.json", JSON.stringify(users), (err, data) => {
+        if(err) console.log(err)
+    })
     fs.readFile(submitPageFileLocation, "utf-8", (err, data) => {
         if(err) console.log(err)
             else{
@@ -40,3 +50,6 @@ app.post("/home/submit", (req, res) => {
 app.listen(3000, () => {
     console.log("Server started...")
 })
+
+
+// https://github.com/Shrey-9659/CSE_T2_Backend
